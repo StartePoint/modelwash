@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource prefix="/icons">
+    <file alias="modelwash.png">../../resources/icons/modelwash-128.png</file>
+    <file alias="modelwash.ico">../../resources/icons/modelwash.ico</file>
+  </qresource>
+</RCC>

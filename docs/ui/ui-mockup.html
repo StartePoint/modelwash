@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ModelWash · UI 线框原型</title>
+  <style>
+    :root {
+      --bg: #12151a;
+      --bg-elev: #1a1f27;
+      --bg-panel: #222933;
+      --line: #2e3744;
+      --text: #e8edf4;
+      --muted: #8b97a8;
+      --accent: #3db8a0;
+      --accent-dim: #2a8f7c;
+      --warn: #d4a017;
+      --danger: #e07050;
+      --ok: #5cbf7a;
+      --radius: 10px;
+      --font: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: #0b0d10;
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .page-hd {
+      padding: 20px 28px 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+      align-items: baseline;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: #0f1216;
+    }
+    .page-hd h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+    .page-hd p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tabs button {
+      border: 1px solid var(--line);
+      background: var(--bg-elev);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .tabs button.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #06241e;
+      font-weight: 600;
+    }
+    .stage-wrap {
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+    }
+    /* Fake desktop window */
+    .window {
+      width: min(1100px, 100%);
+      height: 640px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.55);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .titlebar {
+      height: 36px;
+      background: #161b22;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 8px;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.r { background: #ff5f57; }
+    .dot.y { background: #febc2e; }
+    .dot.g { background: #28c840; }
+    .screen { flex: 1; display: none; min-height: 0; }
+    .screen.on { display: flex; flex-direction: column; }
+
+    /* Persona */
+    .persona {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(61,184,160,.12), transparent),
+        var(--bg);
+      padding: 24px;
+    }
+    .persona h2 {
+      margin: 0;
+      font-size: 1.6rem;
+      font-weight: 650;
+    }
+    .persona .sub { color: var(--muted); margin: 0; }
+    .persona-cards {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .persona-card {
+      width: 260px;
+      padding: 28px 24px;
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: border-color .15s, transform .15s;
+      text-align: left;
+    }
+    .persona-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .persona-card .tag {
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .persona-card h3 { margin: 0 0 8px; font-size: 1.15rem; }
+    .persona-card p { margin: 0; color: var(--muted); font-size: 0.88rem; line-height: 1.45; }
+    .persona-foot { color: var(--muted); font-size: 0.8rem; }
+
+    /* Main shell */
+    .topbar {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      background: var(--bg-elev);
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      margin: 0 auto;
+      font-weight: 650;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+    }
+    .btn {
+      border: 1px solid var(--line);
+      background: var(--bg-panel);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--muted); }
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #042019;
+      font-weight: 600;
+    }
+    .btn.ghost { background: transparent; }
+    .btn:disabled, .seg button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .seg {
+      display: flex;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .seg button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+    .seg button.on {
+      background: var(--bg-panel);
+      color: var(--text);
+      font-weight: 600;
+    }
+    .body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 168px 1fr 260px;
+      min-height: 0;
+    }
+    .rail, .panel {
+      background: var(--bg-elev);
+      border-right: 1px solid var(--line);
+      padding: 12px;
+      overflow: auto;
+    }
+    .panel { border-right: 0; border-left: 1px solid var(--line); }
+    .rail h4, .panel h4 {
+      margin: 0 0 10px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .obj-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .obj-card.sel {
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 1px var(--accent-dim);
+    }
+    .thumb {
+      height: 64px;
+      border-radius: 6px;
+      background:
+        linear-gradient(145deg, #3a4555, #1e252f);
+      margin-bottom: 8px;
+      position: relative;
+    }
+    .thumb::after {
+      content: "";
+      position: absolute;
+      inset: 18% 28%;
+      background: linear-gradient(160deg, #9eb0c4, #5a6b7c);
+      clip-path: polygon(50% 8%, 92% 78%, 8% 78%);
+      opacity: .85;
+    }
+    .obj-card .name { font-size: 0.82rem; }
+    .add-obj {
+      width: 100%;
+      margin-top: 4px;
+      border-style: dashed;
+    }
+    .viewport {
+      position: relative;
+      background:
+        radial-gradient(circle at 50% 42%, #2a3340 0%, #151a21 55%, #10141a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .viewport .grid {
+      position: absolute;
+      inset: 0;
+      opacity: 0.2;
+      background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, #000 20%, transparent 75%);
+    }
+    .mesh-preview {
+      width: 180px;
+      height: 180px;
+      background: linear-gradient(155deg, #c5d2e0, #6d7f93 40%, #3d4a58);
+      clip-path: polygon(50% 6%, 94% 78%, 50% 94%, 6% 78%);
+      filter: drop-shadow(0 18px 30px rgba(0,0,0,.45));
+      position: relative;
+      z-index: 1;
+    }
+    .vp-hint {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: rgba(0,0,0,.35);
+      padding: 4px 10px;
+      border-radius: 999px;
+      z-index: 2;
+    }
+    .panel-block { display: none; }
+    .panel-block.on { display: block; animation: fade .18s ease; }
+    @keyframes fade { from { opacity: 0; transform: translateY(4px);} to { opacity:1; transform:none;} }
+    .panel h3 {
+      margin: 0 0 14px;
+      font-size: 1.05rem;
+    }
+    .choice-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .choice {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--bg-panel);
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .choice.on {
+      border-color: var(--accent);
+      background: rgba(61,184,160,.12);
+    }
+    .choice input { accent-color: var(--accent); }
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .stat {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+    }
+    .stat .l { font-size: 0.7rem; color: var(--muted); }
+    .stat .v { font-size: 0.95rem; margin-top: 4px; font-variant-numeric: tabular-nums; }
+    .stat.after .v { color: var(--ok); }
+    .stack { display: flex; flex-direction: column; gap: 8px; }
+    .adv {
+      margin-top: 14px;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }
+    .adv summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+    }
+    .field {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+    .field select, .field input[type="range"] {
+      max-width: 120px;
+    }
+    .brush-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+    .brush-row .btn.on {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-size: 0.75rem;
+      cursor: pointer;
+      background: var(--bg-panel);
+    }
+    .chip.on { border-color: var(--accent); background: rgba(61,184,160,.15); }
+    .note {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-top: 10px;
+    }
+    .statusbar {
+      height: 32px;
+      border-top: 1px solid var(--line);
+      background: #161b22;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 16px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .statusbar .warn { color: var(--warn); }
+    .statusbar .spacer { margin-left: auto; }
+    .legend {
+      max-width: 1100px;
+      margin: 0 auto 32px;
+      padding: 0 24px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.55;
+    }
+    .legend code {
+      background: var(--bg-elev);
+      padding: 1px 6px;
+      border-radius: 4px;
+      color: var(--text);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="page-hd">
+    <div>
+      <h1>ModelWash · UI 线框原型</h1>
+      <p>浏览器可交互预览 · 对齐 docs/ui/UI设计.md · 非最终视觉稿</p>
+    </div>
+    <div class="tabs" id="pageTabs">
+      <button type="button" data-screen="persona" class="active">① 人设选择</button>
+      <button type="button" data-screen="main">② 主界面</button>
+    </div>
+  </header>
+
+  <div class="stage-wrap">
+    <div class="window" aria-label="ModelWash 窗口原型">
+      <div class="titlebar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span style="margin-left:8px">洗模型 — ModelWash</span>
+      </div>
+
+      <!-- Persona -->
+      <div class="screen on" id="screen-persona">
+        <div class="persona">
+          <div style="text-align:center">
+            <h2>你更像哪一种？</h2>
+            <p class="sub">选一次即可，以后在设置里改。会改变默认推荐，不锁定功能。</p>
+          </div>
+          <div class="persona-cards">
+            <button type="button" class="persona-card" id="pickShipper">
+              <div class="tag">AssetShipper</div>
+              <h3>我要交付资源</h3>
+              <p>网页 / 小游戏用，优先体积与兼容。推荐「网页」「游戏」清洗。</p>
+            </button>
+            <button type="button" class="persona-card" id="pickAi">
+              <div class="tag">AICleanup</div>
+              <h3>我要修 AI 出的模</h3>
+              <p>先抹平再瘦身。打开后会提示可以用「修一修」。</p>
+            </button>
+          </div>
+          <p class="persona-foot">可在设置里随时更改</p>
+        </div>
+      </div>
+
+      <!-- Main -->
+      <div class="screen" id="screen-main">
+        <div class="topbar">
+          <button type="button" class="btn">打开</button>
+          <button type="button" class="btn primary">导出</button>
+          <button type="button" class="btn ghost">撤销</button>
+          <button type="button" class="btn ghost">重做</button>
+          <div class="brand">洗模型</div>
+          <div class="seg" id="modeSeg">
+            <button type="button" data-mode="wash" class="on">清洗</button>
+            <button type="button" data-mode="touchup" title="0.2">修一修</button>
+            <button type="button" data-mode="assemble" title="0.3">拼一拼</button>
+            <button type="button" data-mode="present" title="0.4">摆好看</button>
+          </div>
+          <button type="button" class="btn ghost" title="设置">⚙</button>
+          <button type="button" class="btn ghost" title="关于">?</button>
+        </div>
+        <div class="body">
+          <aside class="rail">
+            <h4>物体</h4>
+            <div class="obj-card sel">
+              <div class="thumb"></div>
+              <div class="name">character.glb</div>
+            </div>
+            <div class="obj-card">
+              <div class="thumb" style="opacity:.7"></div>
+              <div class="name">prop_cup.obj</div>
+            </div>
+            <button type="button" class="btn add-obj">+ 导入</button>
+          </aside>
+          <main class="viewport">
+            <div class="grid"></div>
+            <div class="mesh-preview" aria-hidden="true"></div>
+            <div class="vp-hint" id="vpHint">轨道旋转 · 滚轮缩放</div>
+          </main>
+          <aside class="panel">
+            <!-- Wash -->
+            <div class="panel-block on" data-panel="wash">
+              <h3>清洗</h3>
+              <div class="choice-row" id="washTarget">
+                <label class="choice on"><input type="radio" name="wt" checked /> 网页</label>
+                <label class="choice"><input type="radio" name="wt" /> 游戏</label>
+                <label class="choice"><input type="radio" name="wt" /> 自定义</label>
+              </div>
+              <div class="stats">
+                <div class="stat">
+                  <div class="l">清洗前</div>
+                  <div class="v">128k 面<br /><span style="color:var(--muted);font-size:.8rem">约 24 MB</span></div>
+                </div>
+                <div class="stat after">
+                  <div class="l">清洗后（预览）</div>
+                  <div class="v">64k 面<br /><span style="color:var(--muted);font-size:.8rem">约 9 MB</span></div>
+                </div>
+              </div>
+              <div class="stack">
+                <button type="button" class="btn primary">预览清洗效果</button>
+                <button type="button" class="btn">导出 GLB</button>
+              </div>
+              <details class="adv">
+                <summary>高级</summary>
+                <div class="field"><span>贴图最长边</span>
+                  <select><option>2K</option><option selected>1K</option><option>512</option></select>
+                </div>
+                <div class="field"><span>几何压缩</span>
+                  <select><option>Meshopt</option><option>Draco</option><option>无</option></select>
+                </div>
+                <div class="field"><span>减面强度</span>
+                  <input type="range" min="0" max="100" value="50" />
+                </div>
+              </details>
+            </div>
+            <!-- TouchUp -->
+            <div class="panel-block" data-panel="touchup">
+              <h3>修一修</h3>
+              <div class="brush-row" id="brushes">
+                <button type="button" class="btn on">抹平</button>
+                <button type="button" class="btn">鼓一点</button>
+                <button type="button" class="btn">压平</button>
+              </div>
+              <div class="field"><span>半径</span><input type="range" min="1" max="100" value="40" /></div>
+              <div class="field"><span>强度</span><input type="range" min="1" max="100" value="55" /></div>
+              <button type="button" class="btn primary" style="width:100%;margin-top:8px">整体光滑一下</button>
+              <p class="note">大模型请先清洗；所有操作可撤销。左键涂抹，右键/Alt 旋转视角。</p>
+            </div>
+            <!-- Assemble -->
+            <div class="panel-block" data-panel="assemble">
+              <h3>拼一拼</h3>
+              <div class="stack">
+                <button type="button" class="btn">贴地</button>
+                <button type="button" class="btn">居中</button>
+                <button type="button" class="btn">对齐包围盒 ▾</button>
+                <label class="choice" style="margin-top:4px">
+                  <input type="checkbox" /> 表面吸附
+                </label>
+                <button type="button" class="btn primary">合成一个 GLB 导出</button>
+              </div>
+              <p class="note">不会挖洞合并（无布尔）。多个零件摆好后烘成一个文件。</p>
+            </div>
+            <!-- Present -->
+            <div class="panel-block" data-panel="present">
+              <h3>摆好看</h3>
+              <h4 style="margin-top:0">灯光</h4>
+              <div class="chips" data-chip-group>
+                <span class="chip on">影棚</span><span class="chip">户外</span>
+                <span class="chip">柔光</span><span class="chip">白底</span>
+              </div>
+              <h4>背景</h4>
+              <div class="chips" data-chip-group>
+                <span class="chip on">渐变</span><span class="chip">纯色</span><span class="chip">HDRI</span>
+              </div>
+              <h4>美化</h4>
+              <div class="chips" data-chip-group>
+                <span class="chip">磨砂</span><span class="chip on">金属</span>
+                <span class="chip">陶瓷</span><span class="chip">塑料</span>
+              </div>
+              <div class="field"><span>颜色</span><input type="color" value="#c0c8d4" /></div>
+              <div class="field"><span>金属度</span><input type="range" value="70" /></div>
+              <div class="field"><span>粗糙度</span><input type="range" value="35" /></div>
+              <div class="stack" style="margin-top:10px">
+                <button type="button" class="btn">换贴图</button>
+                <button type="button" class="btn primary">截图</button>
+                <label class="choice"><input type="checkbox" /> 透明底</label>
+              </div>
+            </div>
+          </aside>
+        </div>
+        <div class="statusbar">
+          <span>面数 128k</span>
+          <span>贴图 ~12MB</span>
+          <span class="warn" id="statusWarn">建议先清洗（示范警告）</span>
+          <span class="spacer">本地处理 · 不上传</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <p><strong>怎么用：</strong>点上方「人设选择 / 主界面」；主界面顶栏可切换四种模式看右侧面板。0.1 真产品里「修一修 / 拼一拼 / 摆好看」可先灰掉，这里为方便评审全部可点。</p>
+    <p>文件位置：<code>docs/ui/ui-mockup.html</code> — 双击用浏览器打开即可。</p>
+  </div>
+
+  <script>
+    const screens = {
+      persona: document.getElementById("screen-persona"),
+      main: document.getElementById("screen-main"),
+    };
+    document.querySelectorAll("#pageTabs button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#pageTabs button").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const id = btn.dataset.screen;
+        Object.entries(screens).forEach(([k, el]) => el.classList.toggle("on", k === id));
+      });
+    });
+    function goMain() {
+      document.querySelector('#pageTabs [data-screen="main"]').click();
+    }
+    document.getElementById("pickShipper").addEventListener("click", goMain);
+    document.getElementById("pickAi").addEventListener("click", goMain);
+
+    const hints = {
+      wash: "轨道旋转 · 滚轮缩放",
+      touchup: "左键涂抹 · 右键/Alt 旋转",
+      assemble: "拖拽摆放 · 可开表面吸附",
+      present: "调光看效果 · 可截图",
+    };
+    document.querySelectorAll("#modeSeg button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#modeSeg button").forEach((b) => b.classList.remove("on"));
+        btn.classList.add("on");
+        const mode = btn.dataset.mode;
+        document.querySelectorAll(".panel-block").forEach((p) => {
+          p.classList.toggle("on", p.dataset.panel === mode);
+        });
+        document.getElementById("vpHint").textContent = hints[mode] || "";
+      });
+    });
+
+    document.querySelectorAll("#washTarget .choice").forEach((c) => {
+      c.addEventListener("click", () => {
+        document.querySelectorAll("#washTarget .choice").forEach((x) => x.classList.remove("on"));
+        c.classList.add("on");
+        c.querySelector("input").checked = true;
+      });
+    });
+    document.querySelectorAll("#brushes .btn").forEach((b) => {
+      b.addEventListener("click", () => {
+        document.querySelectorAll("#brushes .btn").forEach((x) => x.classList.remove("on"));
+        b.classList.add("on");
+      });
+    });
+    document.querySelectorAll("[data-chip-group]").forEach((group) => {
+      group.querySelectorAll(".chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          group.querySelectorAll(".chip").forEach((c) => c.classList.remove("on"));
+          chip.classList.add("on");
+        });
+      });
+    });
+  </script>
+</body>
+</html>

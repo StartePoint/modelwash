@@ -1,0 +1,57 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "MSVC + Qt 6.5.3",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "C:/Qt/6.5.3/msvc2019_64"
+      }
+    },
+    {
+      "name": "clion-debug",
+      "displayName": "CLion Debug (MSVC)",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build-clion-debug",
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "C:/Qt/6.5.3/msvc2019_64"
+      }
+    },
+    {
+      "name": "clion-release",
+      "displayName": "CLion Release (MSVC)",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build-clion-release",
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "C:/Qt/6.5.3/msvc2019_64"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "default-release",
+      "configurePreset": "default",
+      "configuration": "Release"
+    },
+    {
+      "name": "clion-debug",
+      "configurePreset": "clion-debug",
+      "configuration": "Debug"
+    },
+    {
+      "name": "clion-release",
+      "configurePreset": "clion-release",
+      "configuration": "Release"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+# Build
+build/
+out/
+cmake-build-*/
+build-clion-*/
+.vs/
+.idea/
+CMakeUserPresets.json
+tools/ninja.exe
+tools/*.zip
+
+# Qt / vcpkg
+vcpkg_installed/
+.qt/
+aqtinstall.log
+
+# OS / IDE
+*.user
+*.suo
+*.obj
+*.pdb
+*.ilk
+.DS_Store
+Thumbs.db
+
+# Legacy JS (should be gone)
+node_modules/
+dist/
